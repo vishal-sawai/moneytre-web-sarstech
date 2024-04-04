@@ -4,10 +4,38 @@ import Topbar from '../Component/Topbar'
 import Header from '../Component/Header'
 import Footer from '../Component/Footer'
 import { blogs } from '../Api/'
+import { FaRegShareSquare } from "react-icons/fa";
+import {
+  FacebookShareButton,
+  WhatsappShareButton,
+  LinkedinShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  EmailShareButton,
+  WhatsappIcon,
+  FacebookIcon,
+  LinkedinIcon,
+  TelegramIcon,
+  TwitterIcon,
+  EmailIcon,
+} from 'react-share';
+
+
 
 function Blogs() {
 
+
+
   const [blog] = useState(blogs);
+
+  const [currentBlogId, setCurrentBlogId] = useState(null);
+
+  const handleShow = (blogId) => {
+    setCurrentBlogId(blogId);
+  };
+
+  // Share Blog Url
+  const shareUrl = 'http://localhost:3000/blogdetails/' + currentBlogId;
 
   return (
     <div className='main'>
@@ -42,16 +70,66 @@ function Blogs() {
                         <Link to={`/blogdetails/${blog.id}`}>{blog.title}</Link>
                       </h2>
 
-                      <div class="d-flex align-items-center">
-                        <img src="assets/img/blog/blog-author-4.jpg" alt="" class="img-fluid post-author-img flex-shrink-0" />
-                        <div class="post-meta">
-                          <p class="post-author">{blog.userName}</p>
-                          <p class="post-date">
-                            <time datetime="2022-01-01">{blog.publishDate}</time>
-                          </p>
+                      <div class="d-flex align-items-center justify-content-between">
+                        <div className='d-flex'>
+                          <img src="assets/img/blog/blog-author-4.jpg" alt="" class="img-fluid post-author-img flex-shrink-0" />
+                          <div class="post-meta">
+                            <p class="post-author">{blog.userName}</p>
+                            <p class="post-date">
+                              <time datetime="2022-01-01">{blog.publishDate}</time>
+                            </p>
+                          </div>
                         </div>
+
+                        {/* Shares blog */}
+                        <div className="post-share">
+                          <FaRegShareSquare data-bs-toggle="modal" data-bs-target="#ShareModal" style={{ fontSize: "20px", cursor: "pointer" }} onClick={() => handleShow(blog.id)} />
+                        </div>
+
                       </div>
 
+                      {/* Share Blog Modal */}
+                      <div class="modal fade" id="ShareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title text-danger" id="exampleModalLabel">Share</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body d-flex flex-wrap justify-content-around px-5 py-4">
+                              <FacebookShareButton className="my-2"
+                                url={shareUrl}>
+                                <FacebookIcon size={40} round={true} />
+                              </FacebookShareButton>
+
+                              <WhatsappShareButton className="my-2"
+                                url={shareUrl}>
+                                <WhatsappIcon size={40} round={true} />
+                              </WhatsappShareButton>
+
+                              <LinkedinShareButton className="my-2"
+                                url={shareUrl}>
+                                <LinkedinIcon size={40} round={true} />
+                              </LinkedinShareButton>
+
+                              <EmailShareButton className="my-2"
+                                url={shareUrl}>
+                                <EmailIcon size={40} round={true} />
+                              </EmailShareButton>
+
+                              <TelegramShareButton className="my-2"
+                                url={shareUrl}>
+                                <TelegramIcon size={40} round={true} />
+                              </TelegramShareButton>
+
+                              <TwitterShareButton className="my-2"
+                                url={shareUrl}>
+                                <TwitterIcon size={40} round={true} />
+                              </TwitterShareButton>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </article>
                   </div>
                 )
@@ -60,11 +138,11 @@ function Blogs() {
             </div>
           </div>
 
-        </section>
+        </section >
 
-      </main>
+      </main >
       <Footer />
-    </div>
+    </div >
   )
 }
 
