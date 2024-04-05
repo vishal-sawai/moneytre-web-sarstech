@@ -3,19 +3,36 @@ import { Link } from 'react-router-dom'
 import Topbar from '../Component/Topbar'
 import Header from '../Component/Header'
 import Footer from '../Component/Footer'
-import { blogs } from '../Api/'
+// import { blogs } from '../Api/'
 import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 
 function BlogDetails() {
 
     const { id } = useParams();
-    // covert string to number
-    const blogId = Number(id);
-    const blog = blogs.find(blog => blog.id === blogId);
+
+    // Server Url
+    const serverUrl = process.env.REACT_APP_SERVER_URL;
+
+    const [blog, setBlog] = React.useState(null);
+
+    // Fetch Blog
+    const fetchBlog = async () => {
+        try {
+            const response = await axios.get(`${serverUrl}/blog/get_blog/${id}`);
+            setBlog(response.data.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
 
     useEffect(() => {
         window.scrollTo(0, 0)
+        fetchBlog();
     }, [])
 
 

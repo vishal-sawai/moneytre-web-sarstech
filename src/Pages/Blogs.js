@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Topbar from '../Component/Topbar'
 import Header from '../Component/Header'
 import Footer from '../Component/Footer'
-import { blogs } from '../Api/'
+// import { blogs } from '../Api/'
 import { FaRegShareSquare } from "react-icons/fa";
+import axios from 'axios'
 import {
   FacebookShareButton,
   WhatsappShareButton,
@@ -24,9 +25,26 @@ import {
 
 function Blogs() {
 
+  const [blog, setBlog] = useState([]);
 
+  // Server Url
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
 
-  const [blog] = useState(blogs);
+  // Fetch Blogs
+  const fetchBlogs = async () => {
+    try {
+      const response = await axios.get(`${serverUrl}/blog/get_all_blog`);
+      setBlog(response.data.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
 
   const [currentBlogId, setCurrentBlogId] = useState(null);
 
@@ -64,20 +82,22 @@ function Blogs() {
                   <div class="col-xl-4 col-lg-6">
                     <article class="card-border">
                       <div class="post-img">
-                        <img src={blog.image} alt="" class="img-fluid" />
+                        <img src={`data:image/jpeg;base64,${blog.image}`} alt="" class="img-fluid" />
                       </div>
+                      <p className="post-category">{blog.type_blog}</p>
                       <h2 class="title">
                         <Link to={`/blogdetails/${blog.id}`}>{blog.title}</Link>
                       </h2>
 
                       <div class="d-flex align-items-center justify-content-between">
                         <div className='d-flex'>
-                          <img src="assets/img/blog/blog-author-4.jpg" alt="" class="img-fluid post-author-img flex-shrink-0" />
+                          <img src="assets/img/blog/hetal.jpeg" alt="" class="img-fluid post-author-img flex-shrink-0" />
                           <div class="post-meta">
-                            <p class="post-author">{blog.userName}</p>
+                            <p class="post-author">Hetal shah</p>
                             <p class="post-date">
-                              <time datetime="2022-01-01">{blog.publishDate}</time>
-                            </p>
+                              <time datetime={new Date(blog.dateandtime).toISOString()}>
+                                {new Date(blog.dateandtime).toLocaleString()}
+                              </time>                            </p>
                           </div>
                         </div>
 
