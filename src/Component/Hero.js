@@ -14,7 +14,7 @@ function Hero() {
           </div>
         </div>
         <div className="col-lg-6 col-md-4 d-flex justify-content-center align-items-center">
-          <img src="assets/img/blog/blog-1.jpg" data-aos="zoom-out" data-aos-delay="100" className="img-fluid" alt=""  />
+          <img src="assets/img/blog/blog-1.jpg" data-aos="zoom-out" data-aos-delay="100" className="img-fluid" alt="" style={{maxWidth:"110%",marginRight:"15%",marginLeft:"2%"}} />
         </div>
       </div>
     </div>

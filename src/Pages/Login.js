@@ -109,7 +109,7 @@ function Login() {
                 </div>
               </div>
               <span className="text-center fw-bold text-danger" style={{ fontSize: "20px" }}>OR</span>
-              <div className='flex'>
+              <div className='flex googleBtn'>
                 <GoogleLogin
                   clientId={clientId}
                   buttonText="Login with Google"

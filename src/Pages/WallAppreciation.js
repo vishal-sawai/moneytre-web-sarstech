@@ -12,7 +12,7 @@ function WallAppreciation() {
       <main id="main" data-aos="fade-in">
     
     <div class="breadcrumbs" data-aos="fade-in">
-     <div class="container">
+     <div class="container" >
        <ol>
        <li> <Link to={'/'}><a>Home</a></Link>  </li>
    
@@ -22,7 +22,7 @@ function WallAppreciation() {
    </div>
 
    <section id="testimonials" class="testimonials">
-     <div class="container">
+     <div class="container" data-aos="fade-down">
      
        <div class="row">
        <div class="section-title">
@@ -112,7 +112,7 @@ function WallAppreciation() {
 
      </div>
    </section>
-
+   <br></br>
  </main>
 
  <Footer/>
