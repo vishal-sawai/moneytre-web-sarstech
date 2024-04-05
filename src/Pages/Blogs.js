@@ -20,6 +20,7 @@ import {
   TwitterIcon,
   EmailIcon,
 } from 'react-share';
+import { CgCopy } from 'react-icons/cg'
 
 
 
@@ -72,17 +73,26 @@ function Blogs() {
         </section>
         <section id="blog" class="blog">
 
-          <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="container" data-aos="fade-down">
 
             <div class="row gy-4 posts-list">
-
+            {/* <div id="preloader"></div> */}
 
               {blog.map((blog) => {
+                if (!blog) {
+                  return <div id="preloader"></div>
+                  // <div className='d-flex justify-center' style={{ height: "100vh" }}><h1 className='m-auto display-3'>Blog not found</h1></div>
+                }
+
                 return (
+                  
                   <div class="col-xl-4 col-lg-6">
+                 
                     <article class="card-border">
                       <div class="post-img">
-                        <img src={`data:image/jpeg;base64,${blog.image}`} alt="" class="img-fluid" />
+                        {/* <img src={`data:image/jpeg;base64,${blog.image}`} alt="" class="img-fluid" /> */}
+                        {/* <img src={blog.image} alt="" class="img-fluid" /> */}
+                        <img src={blog.image} alt="" class="img-fluid" style={{ maxHeight: "200px", width: "100%" }} />
                       </div>
                       <p className="post-category">{blog.type_blog}</p>
                       <h2 class="title">
@@ -91,13 +101,13 @@ function Blogs() {
 
                       <div class="d-flex align-items-center justify-content-between">
                         <div className='d-flex'>
-                          <img src="assets/img/blog/hetal.jpeg" alt="" class="img-fluid post-author-img flex-shrink-0" />
+                          <img src="assets/img/blog/hetal.jpeg" alt="" class="img-fluid post-author-img flex-shrink-0 rounded-circle" />
                           <div class="post-meta">
                             <p class="post-author">Hetal shah</p>
                             <p class="post-date">
                               <time datetime={new Date(blog.dateandtime).toISOString()}>
                                 {new Date(blog.dateandtime).toLocaleString()}
-                              </time>                            </p>
+                              </time> </p>
                           </div>
                         </div>
 
@@ -146,6 +156,7 @@ function Blogs() {
                                 url={shareUrl}>
                                 <TwitterIcon size={40} round={true} />
                               </TwitterShareButton>
+                              <CgCopy size={40} className="my-2" onClick={() => navigator.clipboard.writeText(shareUrl)} />
                             </div>
                           </div>
                         </div>
@@ -159,7 +170,7 @@ function Blogs() {
           </div>
 
         </section >
-
+        <br></br>
       </main >
       <Footer />
     </div >

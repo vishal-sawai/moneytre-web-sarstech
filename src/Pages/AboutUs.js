@@ -8,19 +8,20 @@ import AboutUsSection from '../Component/AboutUsSection'
 function AboutUs() {
   return (
     <div className="main">
-<Topbar/>
-<Header/>
-<div class="breadcrumbs" data-aos="fade-in">
+      <Topbar />
+      <Header />
+      <div class="breadcrumbs" data-aos="fade-in">
         <div class="container">
-            <ol>  
-                <li> <Link to={'/'}><a>Home</a></Link>  </li>
-            </ol>   
+          <ol>
+            <li> <Link to={'/'}><a>Home</a></Link>  </li>
+          </ol>
         </div>
-        </div>
-<AboutUsSection/>
-<Footer/>
+      </div>
+      <AboutUsSection />
+      <br></br>
+      <Footer />
 
- </div>
+    </div>
   )
 }
 

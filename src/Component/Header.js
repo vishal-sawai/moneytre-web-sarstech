@@ -109,16 +109,16 @@ function Header() {
       { to: "/archives", children: "Archives" },
     ],
   },
-  {
-    title: "Products",
-    links: [
-      { to: "/product", children: "Product 1" },
-      { to: "/product", children: "Product 2" },
-      { to: "/product", children: "Product 3" },
-      { to: "/product", children: "Product 4" },
-      { to: "/product", children: "Product 5" },
-    ],
-  },
+  // {
+  //   title: "Products",
+  //   links: [
+  //     { to: "/product", children: "Product 1" },
+  //     { to: "/product", children: "Product 2" },
+  //     { to: "/product", children: "Product 3" },
+  //     { to: "/product", children: "Product 4" },
+  //     { to: "/product", children: "Product 5" },
+  //   ],
+  // },
   ];
 
   return (
@@ -134,7 +134,7 @@ function Header() {
             <NavItem to="/feedback" children="Feedback" />
             <NavItem to="/contactus" children="Contact Us" />
             {!accessToken &&
-              <li ><NavLink to='/login' className="loginBtn btn-get-started scrollto m-3">Login</NavLink></li>
+              <NavLink to='/login' className="loginBtn btn-get-started scrollto m-3">Login</NavLink>
             }
           </ul>
           {accessToken &&

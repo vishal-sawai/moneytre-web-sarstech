@@ -37,7 +37,8 @@ function BlogDetails() {
 
 
     if (!blog) {
-        return <div className='d-flex justify-center' style={{ height: "100vh" }}><h1 className='m-auto display-3'>Blog not found</h1></div>
+        return <div id="preloader"></div>
+        // <div className='d-flex justify-center' style={{ height: "100vh" }}><h1 className='m-auto display-3'>Blog not found</h1></div>
     }
 
     return (
@@ -68,7 +69,6 @@ function BlogDetails() {
 
                     <div className="container" data-aos="fade-up" data-aos-delay="100">
                         <div className="section-title">
-
                             <h2>Blog Details</h2>
 
                         </div>
