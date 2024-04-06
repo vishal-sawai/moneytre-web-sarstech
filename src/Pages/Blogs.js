@@ -30,6 +30,7 @@ function Blogs() {
 
   // Server Url
   const serverUrl = process.env.REACT_APP_SERVER_URL;
+  const clientUrl = process.env.REACT_APP_CLIENT_URL;
 
   // Fetch Blogs
   const fetchBlogs = async () => {
@@ -54,7 +55,7 @@ function Blogs() {
   };
 
   // Share Blog Url
-  const shareUrl = 'http://localhost:3000/blogdetails/' + currentBlogId;
+  const shareUrl = `${clientUrl}/blogdetails/${currentBlogId}`;
 
   return (
     <div className='main'>
@@ -76,7 +77,7 @@ function Blogs() {
           <div class="container" data-aos="fade-down">
 
             <div class="row gy-4 posts-list">
-            {/* <div id="preloader"></div> */}
+              {/* <div id="preloader"></div> */}
 
               {blog.map((blog) => {
                 if (!blog) {
@@ -85,9 +86,9 @@ function Blogs() {
                 }
 
                 return (
-                  
+
                   <div class="col-xl-4 col-lg-6">
-                 
+
                     <article class="card-border">
                       <div class="post-img">
                         {/* <img src={`data:image/jpeg;base64,${blog.image}`} alt="" class="img-fluid" /> */}
