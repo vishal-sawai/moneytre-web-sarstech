@@ -24,7 +24,6 @@ import Profile from './Pages/Profile';
 
 
 
-
 function App() {
   return (
 
