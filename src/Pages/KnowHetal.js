@@ -17,6 +17,7 @@ function KnowHetal() {
           </ol>
         </div>
       </div>
+      <br></br>
       <KnowHetalSection />
       <Footer />
     </div>
