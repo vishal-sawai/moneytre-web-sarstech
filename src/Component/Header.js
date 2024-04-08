@@ -7,10 +7,10 @@ import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
 import { Toaster, toast } from 'react-hot-toast';
-
+import { jwtDecode } from "jwt-decode";
 
 // Client id
-const clientId = "379584754029-ulud7jcf7ekdmreablefi60kuq2cc7ih.apps.googleusercontent.com";
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 
 const NavItem = ({ to, children }) => (
@@ -124,6 +124,10 @@ function Header() {
     //   ],
     // },
   ];
+  let decoded = null;
+  if (accessToken) {
+    decoded = jwtDecode(accessToken);
+  }
 
   return (
     <header id="header" className="d-flex align-items-center">
@@ -146,7 +150,8 @@ function Header() {
               <div onClick={toggleDropdown} style={{ fontSize: "30px", cursor: "pointer", margin: "10px" }}><CgProfile /></div>
               {dropdownOpen && (
                 <ul>
-                  <li className="mt-1"><Link to="/profile">View Profile</Link></li>
+                  {/* <li className="mt-1"><Link to="/profile">View Profile</Link></li> */}
+                  <li className="mt-1"><Link to="">{decoded && decoded.email}</Link></li>
                   <hr className="my-2" />
                   <li>
                     <GoogleLogout

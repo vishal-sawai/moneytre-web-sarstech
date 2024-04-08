@@ -3,61 +3,92 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Topbar from '../Component/Topbar';
 import Header from '../Component/Header';
-import SignupValidation from '../Component/SignupValidation';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
+import * as yup from 'yup';
 
 // Server Url
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 
-function Register() {
+// Define validation schema
+const schema = yup.object().shape({
+  name: yup.string().required('Name is required'),
+  email: yup.string().email('Email is not valid').required('Email is required'),
+  password: yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase char')
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase char')
+    .required('Password is required'),
+  confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Confirm Password is required')
+});
 
+function Register() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
+
   });
   const [errors, setErrors] = useState({});
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(values);
-    setErrors(SignupValidation(values));
 
-    // API Call
-    const formData = { name: values.name, email: values.email, password: values.password };
-    axios.post(`${serverUrl}/useronboarding/register`, formData)
-      .then((response) => {
-        if (response.status === 201) {
-          toast.success("Account Created Successfully!");
+    try {
+      // Validate form data
+      await schema.validate(values);
 
-          // Redirect to Login after 2 seconds
-          setTimeout(() => {
-            navigate('/login');
-          }, 2000);
-        }
-      })
-      .catch((error) => {
-        if (error.response.status === 409) {
-          toast.error("Email already exists, Please try with another email.");
-        }
-        if (error.response.status === 500) {
-          toast.error("Something went wrong. Please try again later.");
-        }
-        if (error.response.status === 400) {
-          toast.error("All data are required");
-        }
-      });
+      // API Call
+      const formData = { name: values.name, email: values.email, password: values.password };
+      axios.post(`${serverUrl}/useronboarding/register`, formData)
+        .then((response) => {
+          if (response.status === 201) {
+            toast.success("Account Created Successfully!");
+            // Redirect to Login after 2 seconds
+            setTimeout(() => {
+              navigate('/login');
+            }, 2000);
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 409) {
+            toast.error("Email already exists, Please try with another email.");
+          }
+          if (error.response.status === 500) {
+            toast.error("Something went wrong. Please try again later.");
+          }
+          if (error.response.status === 400) {
+            toast.error("All data are required");
+          }
+        });
+    } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        // Update errors state with validation error
+        setErrors({ ...errors, [error.path]: error.message });
+      }
+    }
 
   }
-  const handleInput = (e) => {
+  const handleInput = async (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
       [name]: value
     });
-  }
+
+    // Re-validate the input
+    try {
+      await yup.reach(schema, name).validate(value);
+      // If validation was successful, remove the error message
+      setErrors({ ...errors, [name]: undefined });
+    } catch (error) {
+      // If validation failed, do nothing
+    }
+  };
+
   return (
     <div className='main'>
       <Topbar />
@@ -111,7 +142,7 @@ function Register() {
 
                       <div className="col-12">
                         <label for="yourPassword" className="form-label">Confirm Password</label>
-                        <input type="password" name="password" className="form-control" id="yourPassword" onChange={handleInput} required />
+                        <input type="password" name="confirmPassword" className="form-control" id="yourPassword" onChange={handleInput} required />
                         {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword}</p>}
                         <div className="invalid-feedback">Please enter your confirm password!</div>
                       </div>

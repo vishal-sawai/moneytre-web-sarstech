@@ -1,42 +1,46 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Topbar from '../Component/Topbar';
 import Header from '../Component/Header';
-import { useState } from 'react';
-import Validation from '../Component/LoginValidation';
-import { GoogleLogin } from 'react-google-login';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
-import axios from 'axios';
-
-
+import { GoogleLogin } from 'react-google-login';
+import * as yup from 'yup';
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 // server Url
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 
+// Define validation schema
+const schema = yup.object().shape({
+  email: yup.string().email('Email is not valid').required('Email is required'),
+  password: yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+});
+
+
 
 function Login() {
-
   const [values, setValues] = useState({
     email: '',
     password: ''
   });
   const [errors, setErrors] = useState({});
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(values);
-    setErrors(Validation(values));
+    try {
+      // Validate form data
+      await schema.validate(values);
 
-    // API Call
-    const formData = { email: values.email, password: values.password };
-    axios.post(`${serverUrl}/useronboarding/login`, formData)
-      .then((response) => {
-        if (response.status === 200) {
-
-          console.log('Login Success:', response.data.accessToken);
+      // API Call
+      const formData = { email: values.email, password: values.password };
+      axios.post(`${serverUrl}/useronboarding/login`, formData)
+        .then((response) => {
           toast.success("Login Successful!");
 
           const token = response.data.accessToken;
@@ -48,31 +52,39 @@ function Login() {
           setTimeout(() => {
             navigate('/');
           }, 2000);
-        }
 
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          toast.error("Invalid Email or Password. Please try again.");
-        }
-        if (error.response.status === 500) {
-          toast.error("Something went wrong. Please try again later.");
-        }
-      });
-
-
+        }).catch((error) => {
+          if (error.response.status === 401) {
+            toast.error("Invalid Email or Password. Please try again.");
+          }
+          if (error.response.status === 500) {
+            toast.error("Something went wrong. Please try again later.");
+          }
+        });
+    } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        // Update errors state with validation error
+        setErrors({ ...errors, [error.path]: error.message });
+      }
+    }
   }
-  const handleInput = (e) => {
+  const handleInput = async (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
       [name]: value
     });
-  }
 
-  const navigate = useNavigate();
+    // Re-validate the input
+    try {
+      await yup.reach(schema, name).validate(value);
+      // If validation was successful, remove the error message
+      setErrors({ ...errors, [name]: undefined });
+    } catch (error) {
+      // If validation failed, do nothing
+    }
+  };
 
-  // Google Login
   // Google Login
   const onSuccess = async (res) => {
     try {
