@@ -6,6 +6,7 @@ import { gapi } from "gapi-script";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import { MdLogout } from "react-icons/md";
+import { Toaster, toast } from 'react-hot-toast';
 
 
 // Client id
@@ -82,11 +83,14 @@ function Header() {
   const navigate = useNavigate();
 
   const onSuccess = (res) => {
-    console.log('Logout Success:');
     localStorage.removeItem('accessToken');
     setAccessToken(null);
+    toast.success("Logout Successful!");
+
     // Redirect to Dashboard
-    navigate('/');
+    setTimeout(() => {
+      navigate('/');
+    }, 2000);
 
   }
 
@@ -109,16 +113,16 @@ function Header() {
       { to: "/archives", children: "Archives" },
     ],
   },
-  // {
-  //   title: "Products",
-  //   links: [
-  //     { to: "/product", children: "Product 1" },
-  //     { to: "/product", children: "Product 2" },
-  //     { to: "/product", children: "Product 3" },
-  //     { to: "/product", children: "Product 4" },
-  //     { to: "/product", children: "Product 5" },
-  //   ],
-  // },
+    // {
+    //   title: "Products",
+    //   links: [
+    //     { to: "/product", children: "Product 1" },
+    //     { to: "/product", children: "Product 2" },
+    //     { to: "/product", children: "Product 3" },
+    //     { to: "/product", children: "Product 4" },
+    //     { to: "/product", children: "Product 5" },
+    //   ],
+    // },
   ];
 
   return (
@@ -169,6 +173,7 @@ function Header() {
           </div>
         </nav>
       </div>
+      <Toaster />
     </header>
   );
 }

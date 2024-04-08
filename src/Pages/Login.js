@@ -7,10 +7,15 @@ import { useState } from 'react';
 import Validation from '../Component/LoginValidation';
 import { GoogleLogin } from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
+import axios from 'axios';
 
 
 
-const clientId = "379584754029-ulud7jcf7ekdmreablefi60kuq2cc7ih.apps.googleusercontent.com";
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
+// server Url
+const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 
 function Login() {
@@ -24,6 +29,38 @@ function Login() {
     e.preventDefault();
     console.log(values);
     setErrors(Validation(values));
+
+    // API Call
+    const formData = { email: values.email, password: values.password };
+    axios.post(`${serverUrl}/useronboarding/login`, formData)
+      .then((response) => {
+        if (response.status === 200) {
+
+          console.log('Login Success:', response.data.accessToken);
+          toast.success("Login Successful!");
+
+          const token = response.data.accessToken;
+
+          // Save the token in local storage
+          localStorage.setItem('accessToken', token);
+
+          // Redirect to Dashboard after 2 seconds
+          setTimeout(() => {
+            navigate('/');
+          }, 2000);
+        }
+
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          toast.error("Invalid Email or Password. Please try again.");
+        }
+        if (error.response.status === 500) {
+          toast.error("Something went wrong. Please try again later.");
+        }
+      });
+
+
   }
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -36,17 +73,33 @@ function Login() {
   const navigate = useNavigate();
 
   // Google Login
-  const onSuccess = (res) => {
-    console.log('Login Success! currentUser:', res.profileObj);
-    localStorage.setItem('accessToken', res.accessToken);
-    localStorage.setItem('profileObj', JSON.stringify(res.profileObj));
+  // Google Login
+  const onSuccess = async (res) => {
+    try {
+      const formData = { email: res.profileObj.email, name: res.profileObj.name, googleId: res.profileObj.googleId, imageUrl: res.profileObj.imageUrl };
+      const response = await axios.post(`${serverUrl}/useronboarding/googleLogin`, formData);
+      if (response.status === 201) {
+        toast.success("Login Successful!");
 
-    // Redirect to Dashboard
-    navigate('/');
-  }
+        const token = response.data.accessToken;
 
+        // Save the token in local storage
+        localStorage.setItem('accessToken', token);
+
+        // Redirect to Dashboard after 2 seconds
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+      }
+
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        toast.error("Something went wrong. Please try again later.");
+      }
+    }
+  };
   const onFailure = (res) => {
-    console.log('Login Failed:', res);
+    toast.error("Login Failed! Please try again.");
   }
 
 
@@ -68,6 +121,8 @@ function Login() {
                     <h3><span>MONEYTRE</span></h3>
                   </a>
                 </div>
+
+                <Toaster />
 
                 <div className="card mb-3">
 

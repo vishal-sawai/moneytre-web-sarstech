@@ -4,22 +4,54 @@ import { NavLink } from 'react-router-dom';
 import Topbar from '../Component/Topbar';
 import Header from '../Component/Header';
 import SignupValidation from '../Component/SignupValidation';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
+
+// Server Url
+const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 function Register() {
 
-  
-  const [values, setValues] = useState({  
-    name:'',
+  const navigate = useNavigate();
+  const [values, setValues] = useState({
+    name: '',
     email: '',
     password: ''
   });
   const [errors, setErrors] = useState({});
-const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     console.log(values);
     setErrors(SignupValidation(values));
+
+    // API Call
+    const formData = { name: values.name, email: values.email, password: values.password };
+    axios.post(`${serverUrl}/useronboarding/register`, formData)
+      .then((response) => {
+        if (response.status === 201) {
+          toast.success("Account Created Successfully!");
+
+          // Redirect to Login after 2 seconds
+          setTimeout(() => {
+            navigate('/login');
+          }, 2000);
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 409) {
+          toast.error("Email already exists, Please try with another email.");
+        }
+        if (error.response.status === 500) {
+          toast.error("Something went wrong. Please try again later.");
+        }
+        if (error.response.status === 400) {
+          toast.error("All data are required");
+        }
+      });
+
   }
-const handleInput = (e) => {  
+  const handleInput = (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
@@ -45,6 +77,8 @@ const handleInput = (e) => {
                   </a>
                 </div>
 
+                <Toaster />
+
                 <div className="card mb-3">
 
                   <div className="card-body">
@@ -64,7 +98,7 @@ const handleInput = (e) => {
 
                       <div className="col-12">
                         <label for="yourEmail" className="form-label">Your Email</label>
-                        <input type="email" name="email" className="form-control" id="yourEmail"  onChange={handleInput}required />
+                        <input type="email" name="email" className="form-control" id="yourEmail" onChange={handleInput} required />
                         {errors.email && <p className="text-danger">{errors.email}</p>}
                         <div className="invalid-feedback">Please enter a valid Email adddress!</div>
                       </div>
@@ -74,10 +108,10 @@ const handleInput = (e) => {
                         {errors.password && <p className="text-danger">{errors.password}</p>}
                         <div className="invalid-feedback">Please enter your password!</div>
                       </div>
-                    
+
                       <div className="col-12">
                         <label for="yourPassword" className="form-label">Confirm Password</label>
-                        <input type="password" name="password" className="form-control" id="yourPassword" onChange={handleInput}required />
+                        <input type="password" name="password" className="form-control" id="yourPassword" onChange={handleInput} required />
                         {errors.confirmPassword && <p className="text-danger">{errors.confirmPassword}</p>}
                         <div className="invalid-feedback">Please enter your confirm password!</div>
                       </div>
