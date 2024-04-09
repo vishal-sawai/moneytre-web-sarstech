@@ -31,7 +31,7 @@ function OnboardAdvisory() {
                   <img src="assets/img/team/ranjitvichare.jpg" class="img-fluid" alt="" />
                   <div class="member-content">
                     <h4>Ranjit Vichare</h4>
-                    <span>Web Development</span>
+                    {/* <span>Web Development</span> */}
                     <p>
                       Ranjit Eknath Vichare has been successfully and consistently delivering views and recommendations that have resulted in win win situation across different categories of investors and traders. He has written in depth and all-encompassing reports on different asset class, for well-known research houses and brokerage firms.
                     </p>
@@ -47,8 +47,8 @@ function OnboardAdvisory() {
                 <div class="member">
                   <img src="assets/img/team/indrajit2.jpg" class="img-fluid" alt="" />
                   <div class="member-content">
-                    <h4>Sarah Jhinson</h4>
-                    <span>Marketing</span>
+                    <h4>Indrazith Shantharaj</h4>
+                    {/* <span>Marketing</span> */}
                     <p>
                       Indrazith Shantharaj is a Trader, Investor, a Best Selling Author, and award-winning entrepreneur based in Bangalore, India.
                     </p>

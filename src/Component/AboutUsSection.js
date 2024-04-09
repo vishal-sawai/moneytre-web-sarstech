@@ -4,7 +4,7 @@ import React from 'react'
 function AboutUsSection() {
   return (
     <section id="about" class="about section-bg">
-      <div class="container" data-aos="fade-up">
+      <div class="container"data-aos="fade-up">
 
         <div class="section-title">
           <h2>About Us</h2>

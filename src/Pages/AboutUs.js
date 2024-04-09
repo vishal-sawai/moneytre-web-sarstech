@@ -17,6 +17,7 @@ function AboutUs() {
           </ol>
         </div>
       </div>
+      <br></br>
       <AboutUsSection />
       <br></br>
       <Footer />
